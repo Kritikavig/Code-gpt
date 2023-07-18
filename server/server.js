@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { response } from 'express';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
 import { Configuration, OpenAIApi } from 'openai';
@@ -23,14 +23,13 @@ app.get('/', async (req, res) => {
 
 app.post('/', async (req, res) => {
     try {
-        const prompt = req.body.prompt;
 
+        const prompt = req.body.prompt;                         //some error
         const response = await openai.createCompletion({
-            model: "gpt-3.5-turbo",
-            // messages: [{role: "user" , content: `${prompt}`}],
+            model: "text-davinci-003",
             prompt: `${prompt}`,
             temperature: 0, // Higher values means the model will take more risks.
-            max_tokens: 100, // The maximum number of tokens to generate in the completion
+            max_tokens: 7, // The maximum number of tokens to generate in the completion
             top_p: 1, 
             frequency_penalty: 0.5, 
             presence_penalty: 0, 
@@ -42,8 +41,9 @@ app.post('/', async (req, res) => {
 
     } catch (error) {
         console.error(error);
+        console.log(response);
         res.status(500).send(error || 'Something went wrong');
     }
 })
 
-app.listen(5000, () => console.log('Server is running on port http://localhost:5000'));
+app.listen(5000, () => console.log('Server is running on port http://localhost:5000/'));
